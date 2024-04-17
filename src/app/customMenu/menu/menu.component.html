@@ -1,0 +1,32 @@
+
+<section>
+  <ul class="accordion">
+    <li class="accordion-item" *ngFor="let item of menuConfig?.menuItems; let i = index">
+      <div class="accordion-header" (click)="toggleItem(i)">
+        @if(item.items){
+          <a>
+            @if(item.icon){
+              <i [class]="item.icon" class="iconleft"></i>
+            }
+            {{ item.title }}
+            @if (item.items) {
+              <i class="fas fa-chevron-down" [ngClass]="{'rotate': isOpen[i]}"></i>
+            }
+          </a>
+        }@else{
+          <a [routerLink]="item.link" [routerLinkActive]="'active'">
+            @if(item.icon){
+              <i [class]="item.icon"></i>
+            }
+            {{ item.title }}
+          </a>
+        }
+      </div>
+      @if(item.items){
+        <div class="accordion-content" [@expandCollapse]="isOpen[i] ? 'expanded' : 'collapsed'" [ngClass]="{'isOpen': isOpen[i]}">
+          <custom-menu [menuConfig]="{menuItems: item.items}"/>
+        </div>
+      }
+    </li>
+  </ul>
+</section>

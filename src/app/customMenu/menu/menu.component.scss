@@ -1,0 +1,88 @@
+.accordion-content::before{
+  content: '';
+  height: 0px;
+  opacity: 1;
+  width: 3px;
+  background: #e0f3ff;
+  position: absolute;
+  left: 20px;
+  top: 0;
+  border-radius: 15px;;
+}
+
+.accordion-content {
+  position: relative;
+  transition: padding 300ms;
+  padding: .5em 0 0 2rem;
+}
+
+ul {
+  list-style: none;
+}
+
+h3{
+  cursor: pointer;
+}
+
+.accordion-content li > a{
+  color: #6c757d;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0 1.5rem;
+  display: block;
+  height: 2.4rem;
+  position: relative;
+  border-radius: .25rem;
+  color: #343a40;
+  white-space: nowrap;
+  transition: all .2s;
+  margin: .1rem 0;
+}
+
+a  {
+  display: block;
+  line-height: 2.4rem;
+  height: 2.4rem;
+  padding: 0 1.5rem 0 45px;
+  position: relative;
+  border-radius: .25rem;
+  color: #343a40;
+  white-space: nowrap;
+  transition: all .2s;
+  margin: .1rem 0;
+  text-decoration: none;
+}
+
+
+a:hover, .active{
+  background: #e0f3ff;
+  text-decoration: none;
+}
+
+.isOpen::before{
+  height: 100%;
+}
+
+.rotate{
+  transform: rotate(180deg);
+}
+
+i{
+  text-align: center;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  position: absolute;
+  left: auto;
+  right: 0;
+  top: 50%;
+  margin-top: -17px;
+  font-size: 0.9rem;
+  opacity: .3;
+  transition: transform 0.3s ease;
+}
+
+.iconleft{
+  left: 0;
+  right: auto;
+}

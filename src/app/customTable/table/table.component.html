@@ -1,0 +1,30 @@
+@if (tableData) {
+  <div>
+    <table part="tablita">
+      <thead>
+        <tr>
+          @for (col of tableData.colums; track $index) {
+            @if(col.show){
+              <th>{{col.title}}</th>
+            }
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of tableData.data; track $index) {
+          <tr>
+            @for (col of tableData.colums; track $index) {
+             @if(col.show){
+              <td [attr.data-label]="col.title">{{getPropertie(item,col.property)}}</td>
+             }
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+<div>
+  <span part="hola">Holas</span>
+</div>
