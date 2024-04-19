@@ -1,4 +1,4 @@
-import { NestedKeys } from "../customTable/interfaces/table.interface";
+import { NestedKeys } from "../interfaces/table.interface";
 
 
 export const getPropertie = <T>(objeto: T, key: NestedKeys<T>): any=>{

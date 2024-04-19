@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CustomTable, NestedKeys } from '../interfaces/table.interface';
-import { getPropertie } from '../../utils/getPropertie';
+import { getPropertie } from '../utils/getPropertie';
 
 @Component({
   selector: 'custom-table',
