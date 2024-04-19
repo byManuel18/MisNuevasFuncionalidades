@@ -23,7 +23,7 @@
         }
       </div>
       @if(item.items){
-        <div class="accordion-content" [@expandCollapse]="isOpen[i] ? 'expanded' : 'collapsed'" [ngClass]="{'isOpen': isOpen[i]}">
+        <div class="accordion-content" [@expandCollapse]="isOpen[i] ? 'expanded' : 'collapsed'" [ngClass]="{'isOpen': isOpen[i], 'overHidden': !isOpen[i]}">
           <custom-menu [menuConfig]="{menuItems: item.items}"/>
         </div>
       }

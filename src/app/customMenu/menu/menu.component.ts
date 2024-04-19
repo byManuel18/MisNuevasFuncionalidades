@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   animations: [
     trigger('expandCollapse', [
       state('expanded', style({ height: '*' })),
-      state('collapsed', style({ height: 0, overflow: 'hidden' })),
+      state('collapsed', style({ height: 0 })),
       transition('expanded <=> collapsed', animate('300ms ease-in-out'))
     ])
   ]

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CustomTableModule } from './customTable/custom-table.module';
 import { ColumType, CustomTable } from './customTable/interfaces/table.interface';
@@ -7,6 +7,9 @@ import { Menu } from './customMenu/interfaces/menu.interface';
 import { RouterOutlet } from '@angular/router';
 import { CustomAsideModule } from './customAside/custom-aside.module';
 import { AsideService } from './customAside/aside.service';
+import { CustomModalModule } from './customModal/custom-modal.module';
+import { ModalService } from './customModal/modal.service';
+import { PruebaModalComponent } from './prueba-modal/prueba-modal.component';
 
 interface Ejemplo {
   nombre: string;
@@ -25,14 +28,18 @@ interface Ejemplo {
     RouterOutlet,
     CustomTableModule,
     CustomMenuModule,
-    CustomAsideModule
+    CustomAsideModule,
+    CustomModalModule,
+    PruebaModalComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
+  viewContainerRef = inject(ViewContainerRef);
   asideService= inject(AsideService);
+  modalservice= inject(ModalService);
 
   pruebadeTabla: CustomTable<Ejemplo> = {
     data: [{
@@ -145,7 +152,19 @@ export class AppComponent {
     { title: 'Item 2', content: 'Contenido del item 2' },
     { title: 'Item 3', content: 'Contenido del item 3' }
   ];
+
+
+  ngOnInit(): void {
+    this.modalservice.setConfigViewContainer(this.viewContainerRef);
+  }
+
   pruebaToggle(id: string){
     this.asideService.toggleAside(id);
+  }
+
+  showModal(){
+    this.modalservice.openModal(PruebaModalComponent,{backDropDismmiss: true}).onDismiss().then((data)=>{
+      console.log(data);
+    })
   }
 }
