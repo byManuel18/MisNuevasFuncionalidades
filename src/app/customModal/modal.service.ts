@@ -58,8 +58,7 @@ export class ModalService {
 
     modalComponent.instance.modalID = modalID;
 
-    const {data, ...rest} = props;
-    modalComponent.setInput('props', rest);
+    modalComponent.setInput('props', props.modalConfig);
 
     const onDismiss = () => {
       return new Promise<any>((resolve, _) => {
