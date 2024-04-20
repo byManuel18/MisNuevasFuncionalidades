@@ -1,6 +1,6 @@
 import { ComponentRef, Injectable, Type, ViewContainerRef, inject } from '@angular/core';
 import { ModalComponent } from './modal/modal.component';
-import { ModalConfig } from './interfaces/modal.interface';
+import { ModalConfig, ModalData } from './interfaces/modal.interface';
 import { ModalView, ModalConfigView } from './modalData';
 
 
@@ -15,7 +15,7 @@ export class ModalService {
 
   constructor() { }
 
-  openModal<T>(component: Type<T>, props: ModalConfig, lockScroll: boolean = true) {
+  openModal<T>(component: Type<T>, props: ModalData<T>, lockScroll: boolean = true) {
 
     if(!this.viewContainerRef){
       throw new Error('No viewContainerRef set');
@@ -50,8 +50,8 @@ export class ModalService {
 
     if(props.data){
       Object.keys(props.data).forEach((key)=>{
-        if(Object.keys(componentToAdd.instance as Object).includes(key)){
-          componentToAdd.setInput(key, props.data![key]);
+        if(Object.keys(componentToAdd.instance as Object).includes((key))){
+          componentToAdd.setInput(key, props.data![(key as keyof T)]);
         }
       });
     }

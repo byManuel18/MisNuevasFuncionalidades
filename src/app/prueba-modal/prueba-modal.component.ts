@@ -1,4 +1,4 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, Input, inject } from '@angular/core';
 import { ModalView } from '../customModal/modalData';
 
 @Component({
@@ -12,6 +12,8 @@ export class PruebaModalComponent {
 
   constructor(@Inject(ModalView) private modalView: ModalView){
   }
+
+  @Input() titulo: string = "";
 
 
   cerrar(){

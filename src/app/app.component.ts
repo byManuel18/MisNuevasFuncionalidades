@@ -163,7 +163,7 @@ export class AppComponent implements OnInit {
   }
 
   showModal(){
-    this.modalservice.openModal(PruebaModalComponent,{backDropDismmiss: true}).onDismiss().then((data)=>{
+    this.modalservice.openModal(PruebaModalComponent,{modalConfig:{backDropDismmiss: true}, data: {titulo: 'hola'}}).onDismiss().then((data)=>{
       console.log(data);
     })
   }
