@@ -11,7 +11,7 @@ export class ModalService {
 
   private viewContainerRef!: ViewContainerRef;
 
-  private _openModals: Map<string, {modal: ComponentRef<ModalComponent>}> = new Map();
+  private _openModals: Map<string, {modal: ComponentRef<ModalComponent>, lockScroll: boolean}> = new Map();
 
   constructor() { }
 
@@ -38,7 +38,7 @@ export class ModalService {
 
     configView.id = modalID;
 
-    this._openModals.set(modalID,{modal:modalComponent});
+    this._openModals.set(modalID,{modal:modalComponent, lockScroll });
 
     if(lockScroll){
       document.body.style.overflow = 'hidden';
@@ -74,7 +74,9 @@ export class ModalService {
         modalComponent.onDestroy(()=>{
           this._openModals.delete(modalID);
           if(lockScroll){
-            document.body.style.overflow = 'auto';
+            if(this._openModals.size === 0 || !Array.from(this._openModals.values()).some((m => m.lockScroll))){
+              document.body.style.overflow = 'auto';
+            }
           }
           resolve(dataResponseModal);
         });
