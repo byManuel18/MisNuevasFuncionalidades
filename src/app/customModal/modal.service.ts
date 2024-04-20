@@ -1,4 +1,4 @@
-import { ComponentRef, Injectable, Type, ViewContainerRef, inject } from '@angular/core';
+import { ComponentRef, EmbeddedViewRef, Injectable, TemplateRef, Type, ViewContainerRef } from '@angular/core';
 import { ModalComponent } from './modal/modal.component';
 import { ModalConfig, ModalData } from './interfaces/modal.interface';
 import { ModalView, ModalConfigView } from './modalData';
@@ -15,16 +15,22 @@ export class ModalService {
 
   constructor() { }
 
-  openModal<T>(component: Type<T>, props: ModalData<T>, lockScroll: boolean = true) {
+  openModal<T>(component: Type<T> | TemplateRef<any> , props: ModalData<T>, lockScroll: boolean = true) {
 
     if(!this.viewContainerRef){
       throw new Error('No viewContainerRef set');
     }
 
     const modalComponent = this.viewContainerRef.createComponent(ModalComponent);
-    const componentToAdd = this.viewContainerRef.createComponent(component);
+    let componentToAdd: ComponentRef<T> | EmbeddedViewRef<any>;
 
-    modalComponent.instance.contentRef?.insert(componentToAdd.hostView);
+    if(component instanceof TemplateRef ){
+      componentToAdd = this.viewContainerRef.createEmbeddedView(component);
+      modalComponent.instance.contentRef?.insert(componentToAdd);
+    }else{
+      componentToAdd = this.viewContainerRef.createComponent(component);
+      modalComponent.instance.contentRef?.insert(componentToAdd.hostView);
+    }
 
     const modalID = this.generateModalId();
 
@@ -46,14 +52,17 @@ export class ModalService {
 
     configView.close = closeModal;
 
-    componentToAdd.injector.get(ModalView).config = configView;
+    if(componentToAdd instanceof ComponentRef){
 
-    if(props.data){
-      Object.keys(props.data).forEach((key)=>{
-        if(Object.keys(componentToAdd.instance as Object).includes((key))){
-          componentToAdd.setInput(key, props.data![(key as keyof T)]);
-        }
-      });
+      (componentToAdd as ComponentRef<T>).injector.get(ModalView).config = configView;
+
+      if(props.data){
+        Object.keys(props.data).forEach((key)=>{
+          if(Object.keys((componentToAdd as ComponentRef<T>).instance as Object).includes((key))){
+            (componentToAdd as ComponentRef<T>).setInput(key, props.data![(key as keyof T)]);
+          }
+        });
+      }
     }
 
     modalComponent.instance.modalID = modalID;

@@ -2,3 +2,9 @@
 <p>prueba-modal works!</p>
 
 <button (click)="cerrar()">Cerrar</button>
+
+<button (click)="showMOdalWithTemplate(mytemplate)">Open Modal Template</button>
+
+<ng-template #mytemplate>
+  <h1>Modal template desde un modal</h1>
+</ng-template>

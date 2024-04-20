@@ -1,5 +1,6 @@
-import { Component, Inject, Input, inject } from '@angular/core';
+import { Component, Inject, Input, TemplateRef, inject } from '@angular/core';
 import { ModalView } from '../customModal/modalData';
+import { ModalService } from '../customModal/modal.service';
 
 @Component({
   selector: 'app-prueba-modal',
@@ -15,8 +16,16 @@ export class PruebaModalComponent {
 
   @Input() titulo: string = "";
 
+  modalservice = inject(ModalService);
+
 
   cerrar(){
     this.modalView.config.close({prueba: 'Aceptado'});
+  }
+
+  showMOdalWithTemplate(prueba: TemplateRef<any>){
+    this.modalservice.openModal(prueba,{modalConfig:{backDropDismmiss: true}}).onDismiss().then((data)=>{
+      console.log(data);
+    })
   }
 }

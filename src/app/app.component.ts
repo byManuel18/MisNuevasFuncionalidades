@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, inject } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CustomTableModule } from './customTable/custom-table.module';
 import { ColumType, CustomTable } from './customTable/interfaces/table.interface';
@@ -164,6 +164,12 @@ export class AppComponent implements OnInit {
 
   showModal(){
     this.modalservice.openModal(PruebaModalComponent,{modalConfig:{backDropDismmiss: true}, data: {titulo: 'hola'}}).onDismiss().then((data)=>{
+      console.log(data);
+    })
+  }
+
+  showMOdalWithTemplate(prueba: TemplateRef<any>){
+    this.modalservice.openModal(prueba,{modalConfig:{backDropDismmiss: true}}).onDismiss().then((data)=>{
       console.log(data);
     })
   }
