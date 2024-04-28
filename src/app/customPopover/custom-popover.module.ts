@@ -10,7 +10,7 @@ import { PopoverControllerService } from './popover-controller.service';
   imports: [
     CommonModule
   ],
-  exports:[PopoverComponent],
+  exports:[],
   providers:[PopoverControllerService]
 })
 export class CustomPopoverModule { }

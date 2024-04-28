@@ -1,3 +1,4 @@
+import { SpinerCustomModule } from './spinerCustom/spiner-custom.module';
 import { Component, OnInit, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CustomTableModule } from './customTable/custom-table.module';
@@ -14,6 +15,7 @@ import { CustomPopoverModule } from './customPopover/custom-popover.module';
 import { PopoverControllerService } from './customPopover/popover-controller.service';
 import { PruebaPopoverComponent } from './prueba-popover/prueba-popover.component';
 import { Position } from './customPopover/interfaces/popopover.interface';
+import { SpinerControllerService } from './spinerCustom/spiner-controller.service';
 
 interface Ejemplo {
   nombre: string;
@@ -36,7 +38,8 @@ interface Ejemplo {
     CustomModalModule,
     PruebaModalComponent,
     CustomPopoverModule,
-    PruebaPopoverComponent
+    PruebaPopoverComponent,
+    SpinerCustomModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -47,6 +50,7 @@ export class AppComponent implements OnInit {
   asideService= inject(AsideService);
   modalservice= inject(ModalService);
   popoverControllerService= inject(PopoverControllerService);
+  spinerControllerService= inject(SpinerControllerService);
 
   pruebadeTabla: CustomTable<Ejemplo> = {
     data: [{
@@ -198,5 +202,13 @@ export class AppComponent implements OnInit {
       console.log(data);
     })
 
+  }
+
+  openSpiner(){
+    this.spinerControllerService.openSpiner();
+
+    setTimeout(()=>{
+      this.spinerControllerService.closeSpiner();
+    },2000);
   }
 }
