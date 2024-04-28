@@ -1,0 +1,40 @@
+.popover-backdrop{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.popover-container{
+  position: absolute;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #ccc;
+  position: absolute;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.arrow-container{
+  position: relative;
+  width: 100%;
+}
+
+.arrowTopBot{
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+

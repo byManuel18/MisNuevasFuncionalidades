@@ -10,6 +10,10 @@ import { AsideService } from './customAside/aside.service';
 import { CustomModalModule } from './customModal/custom-modal.module';
 import { ModalService } from './customModal/modal.service';
 import { PruebaModalComponent } from './prueba-modal/prueba-modal.component';
+import { CustomPopoverModule } from './customPopover/custom-popover.module';
+import { PopoverControllerService } from './customPopover/popover-controller.service';
+import { PruebaPopoverComponent } from './prueba-popover/prueba-popover.component';
+import { Position } from './customPopover/interfaces/popopover.interface';
 
 interface Ejemplo {
   nombre: string;
@@ -30,7 +34,9 @@ interface Ejemplo {
     CustomMenuModule,
     CustomAsideModule,
     CustomModalModule,
-    PruebaModalComponent
+    PruebaModalComponent,
+    CustomPopoverModule,
+    PruebaPopoverComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -40,6 +46,7 @@ export class AppComponent implements OnInit {
   viewContainerRef = inject(ViewContainerRef);
   asideService= inject(AsideService);
   modalservice= inject(ModalService);
+  popoverControllerService= inject(PopoverControllerService);
 
   pruebadeTabla: CustomTable<Ejemplo> = {
     data: [{
@@ -156,6 +163,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.modalservice.setConfigViewContainer(this.viewContainerRef);
+    this.popoverControllerService.setConfigViewContainer = this.viewContainerRef;
   }
 
   pruebaToggle(id: string){
@@ -172,5 +180,23 @@ export class AppComponent implements OnInit {
     this.modalservice.openModal(prueba,{modalConfig:{backDropDismmiss: true}}).onDismiss().then((data)=>{
       console.log(data);
     })
+  }
+
+  muestraPopover($event: MouseEvent, zone: Position){
+    const {closePopover, onDismiss} = this.popoverControllerService.createPopover(PruebaPopoverComponent,{modalConfig:{event: $event,backDropDismmiss: true, position:zone }, data: {title: 'Hola desde el App'}});
+
+    onDismiss().then(data=>{
+      console.log(data);
+    })
+
+  }
+
+  popoverTemplate($event: MouseEvent, template: TemplateRef<any>){
+    const {closePopover, onDismiss} = this.popoverControllerService.createPopover(template,{modalConfig:{event: $event,backDropDismmiss: true, position: 'top' }, data: {title: 'Hola desde el App'}});
+
+    onDismiss().then(data=>{
+      console.log(data);
+    })
+
   }
 }

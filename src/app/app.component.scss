@@ -32,5 +32,15 @@
 
 #maincont{
   width: 100%;
-  text-align: end;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+  gap: 30px;
+  h2{
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
