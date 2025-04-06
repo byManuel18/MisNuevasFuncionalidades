@@ -8,7 +8,7 @@
             @if(item.icon){
               <i [class]="item.icon" class="iconleft"></i>
             }
-            {{ item.title }}
+            <span>{{ item.title }}</span>
             @if (item.items) {
               <i class="fas fa-chevron-down" [ngClass]="{'rotate': isOpen[i]}"></i>
             }
@@ -18,7 +18,7 @@
             @if(item.icon){
               <i [class]="item.icon"></i>
             }
-            {{ item.title }}
+            <span>{{ item.title }}</span>
           </a>
         }
       </div>

@@ -1,81 +1,128 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { AsideService } from '../aside.service';
-import { AnimationBuilder, AnimationFactory, animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 @Component({
   selector: 'custom-aside',
   templateUrl: './aside.component.html',
   styleUrl: './aside.component.scss',
   animations: [
-    // trigger('expandCollapse', [
-    //   state('expanded', style({ width: '*' })),
-    //   state('collapsed', style({ width: 0, overflow: 'hidden' })),
-    //   transition('expanded <=> collapsed', animate('300ms ease-in-out'))
-    // ])
     trigger('expandCollapse', [
-      state('expanded', style({ opacity: 1 })),
-      state('collapsed', style({ opacity: 0 })),
-      transition('expanded <=> collapsed', animate('300ms ease-in-out'))
-    ])
-  ]
+      state(
+        'expanded-left',
+        style({ transform: 'scaleX(1)', transformOrigin: 'left', width: '*' })
+      ),
+      state(
+        'collapsed-left',
+        style({ transform: 'scaleX(0)', transformOrigin: 'left', width: '0px' })
+      ),
+      state(
+        'expanded-right',
+        style({ transform: 'scaleX(1)', transformOrigin: 'right', width: '*' })
+      ),
+      state(
+        'collapsed-right',
+        style({
+          transform: 'scaleX(0)',
+          transformOrigin: 'right',
+          width: '0px',
+        })
+      ),
+      transition('* <=> *', animate('300ms ease-in-out')),
+    ]),
+  ],
 })
-export class AsideComponent implements OnInit, OnDestroy{
-
-  @Input()  idAside?:string;
-  @Input() parentAside?: HTMLElement;
-  @Input() typeAside: 'push' | 'cover-left' | 'cover-right' = 'push';
+export class AsideComponent implements OnInit, OnDestroy {
+  @Input() idAside?: string;
+  @Input() typeAside:
+    | 'push-left'
+    | 'push-right'
+    | 'cover-left'
+    | 'cover-right' = 'push-left';
   @Input() showAside: boolean = true;
+
+  @ViewChild('asideElement', { static: true }) asideElement!: ElementRef;
+
 
   widthParent?: number;
 
   render = inject(Renderer2);
-  animationBuilder = inject(AnimationBuilder);
   asideService = inject(AsideService);
 
-  ngOnInit(): void {
+  @HostBinding('@expandCollapse') get getToggleDrawer(): string {
+    if (this.showAside) {
+      return this.typeAside === 'push-left' || this.typeAside === 'cover-left'
+        ? 'expanded-left'
+        : 'expanded-right';
+    } else {
+      return this.typeAside === 'push-left' || this.typeAside === 'cover-left'
+        ? 'collapsed-left'
+        : 'collapsed-right';
+    }
+  }
 
-    if(!this.idAside){
+  @HostBinding('style.position') get hostPosition(): string | null {
+    return this.isCoverType ? 'absolute' : null;
+  }
+
+  @HostBinding('style.top') get hostTop(): string | null {
+    return this.isCoverType ? '0' : null;
+  }
+
+  @HostBinding('style.left') get hostLeft(): string | null {
+    return this.typeAside === 'cover-left' ? '0' : null;
+  }
+
+  @HostBinding('style.right') get hostRight(): string | null {
+    return this.typeAside === 'cover-right' ? '0' : null;
+  }
+
+  @HostBinding('style.z-index') get hostZIndex(): string | null {
+    return this.isCoverType ? '1000' : null;
+  }
+
+  get isCoverType(): boolean {
+    return this.typeAside === 'cover-left' || this.typeAside === 'cover-right';
+  }
+
+  ngOnInit(): void {
+    if (!this.idAside) {
       throw new Error('No id');
-    }else if(this.asideService.existAside(this.idAside)){
+    } else if (this.asideService.existAside(this.idAside)) {
       throw new Error('Aside exist');
     }
 
-    if(!this.parentAside){
-      throw new Error('No parent');
-    }
-
-    this.asideService.addAside(this.idAside,this);
-    this.widthParent = this.parentAside?.offsetWidth
-    if(this.typeAside === 'cover-left' || this.typeAside === 'cover-right'){
-      this.render.setStyle(this.parentAside.parentElement,'position','relative');
-      this.render.setStyle(this.parentAside,'position','absolute');
-      this.render.setStyle(this.parentAside,this.typeAside === 'cover-left' ? 'left' : 'right','0');
+    this.asideService.addAside(this.idAside, this);
+    if(this.isCoverType){
+      if(this.asideElement.nativeElement?.parentElement?.parentElement){
+        this.render.setStyle(this.asideElement.nativeElement?.parentElement?.parentElement, 'position', 'relative');
+      }
     }
   }
 
-  toggleShow(){
-    if(this.showAside){
-      this.widthParent = this.parentAside?.offsetWidth
-    }
+  toggleShow() {
     this.showAside = !this.showAside;
-
-    if(this.parentAside){
-      const widthParent = this.widthParent + 'px';
-      let animation: AnimationFactory = this.animationBuilder.build([
-        style({ width: this.showAside ? '0px' : '*' }),
-        style({overflow: this.showAside ? 'visible' : 'hidden' }),
-        animate('300ms', style({ width: this.showAside ? widthParent : '0px' })),
-        animate('300ms', style({overflow: this.showAside ? 'visible' : 'hidden' }),),
-      ]);
-      const player = animation.create(this.parentAside);
-      player.play();
-    }
   }
 
   ngOnDestroy(): void {
-    if(this.idAside){
+    if (this.idAside) {
       this.asideService.removeAside(this.idAside);
     }
   }
-
 }

@@ -7,17 +7,18 @@
 
 <button (click)="pruebaToggle('segundo')">Dale papa</button>
 <div id="content">
+  <custom-aside [idAside]="'segundo'" class="pruebaAside pruebaAside2">
 
+    <h2>Hola</h2>
+
+
+    </custom-aside>
   <main>
     <!-- <h3>Hola3</h3>  -->
-    <div class="pruebaAside pruebaAside2" #parent2>
-      <custom-aside [idAside]="'segundo'" [parentAside]="parent2">
+    <!-- <div class="pruebaAside pruebaAside2" #parent2> -->
 
-      <h2>Hola</h2>
-      <button (click)="pruebaToggle('primero')">Dale papa</button>
-
-      </custom-aside>
-    </div>
+    <!-- </div> -->
+    <button (click)="pruebaToggle('primero')">Dale papa</button>
     <div id="maincont">
       <button (click)="muestraPopover($event,'top')">PopoverTop</button>
       <button (click)="muestraPopover($event, 'bottom')">PopoverBottom</button>
@@ -27,14 +28,17 @@
       <h2>Yiip</h2>
     </div>
   </main>
-  <div class="pruebaAside pruebaAside3" #parent>
-    <custom-aside [idAside]="'primero'" [parentAside]="parent" typeAside="cover-right">
+
+  <button (click)="pruebaToggle('segundo')">Dale papa</button>
+  <button (click)="pruebaToggle('primero')">Dale papa cover</button>
+
+  <custom-aside [idAside]="'primero'" class="pruebaAside pruebaAside2" [typeAside]="'cover-right'">
 
     <h2>Hola</h2>
-    <button (click)="pruebaToggle('segundo')">Dale papa</button>
+    <button (click)="pruebaToggle('primero')">Dale papa</button>
+
 
     </custom-aside>
-   </div>
 </div>
 
 <button (click)="showModal()">Open Modal</button>
