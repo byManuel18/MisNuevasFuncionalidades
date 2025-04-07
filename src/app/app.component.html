@@ -51,10 +51,10 @@
 </ng-template>
 
 
-<ng-template #myPopoverTemplate>
+<ng-template #myPopoverTemplate let-title="title">
   <!-- Contenido del popover -->
   <div class="contPop">
-    <div class="divPopover">Contenido del popover generado dinámicamente</div>
+    <div class="divPopover">Contenido del popover generado dinámicamente {{title}}</div>
   </div>
 </ng-template>
 

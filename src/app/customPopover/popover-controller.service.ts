@@ -1,51 +1,56 @@
-import { ComponentRef, EmbeddedViewRef, Injectable, TemplateRef, Type, ViewContainerRef } from '@angular/core';
+import { ApplicationRef, ComponentRef, createComponent, EmbeddedViewRef, inject, Injectable, Injector, TemplateRef, Type } from '@angular/core';
 import { PopoverComponent } from './popover/popover.component';
 import { PopoverConfigView, PopoverView } from './popoverView.service';
 import { PopoverData } from './interfaces/popopover.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+}
+)
 export class PopoverControllerService {
 
-  private viewContainerRef!: ViewContainerRef;
+  private appRef: ApplicationRef= inject(ApplicationRef);
+  private injector: Injector = inject(Injector);
 
-  constructor() { }
+  createPopover<T>(component: Type<T> | TemplateRef<T>, props: PopoverData<T>) {
 
+    const popoverRef = createComponent(PopoverComponent, {
+      environmentInjector: this.appRef.injector,
+      elementInjector: this.injector,
+    });
 
-  createPopover<T>(component: Type<T> | TemplateRef<any>, props: PopoverData<T>){
+    this.appRef.attachView(popoverRef.hostView);
 
-    if(!this.viewContainerRef){
-      throw new Error('No viewContainerRef set');
-    }
-
-    const modalComponent = this.viewContainerRef.createComponent(PopoverComponent);
-
-    let componentToAdd: ComponentRef<T> | EmbeddedViewRef<any>;
-
-    if(component instanceof TemplateRef ){
-      componentToAdd = this.viewContainerRef.createEmbeddedView(component);
-      modalComponent.instance.contentRef?.insert(componentToAdd);
-    }else{
-      componentToAdd = this.viewContainerRef.createComponent(component);
-      modalComponent.instance.contentRef?.insert(componentToAdd.hostView);
-    }
-
+    const domElem = (popoverRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+    document.body.appendChild(domElem);
 
     const configView = new PopoverConfigView<T>();
-
     configView.dataPopover = props.data;
 
+    let componentToAdd: ComponentRef<T> | EmbeddedViewRef<any>;
     let dataResponseModal: any;
-    const closePopover = (dataResponse?: any) =>{
-      dataResponseModal = dataResponse
-      modalComponent.destroy();
-    }
+
+    const closePopover = (dataResponse?: any) => {
+      dataResponseModal = dataResponse;
+      this.appRef.detachView(popoverRef.hostView);
+      popoverRef.destroy();
+    };
 
     configView.close = closePopover;
 
-    modalComponent.injector.get(PopoverView).config = configView;
+    popoverRef.injector.get(PopoverView).config = configView;
+    popoverRef.setInput('props', props.modalConfig);
 
-    if(componentToAdd instanceof ComponentRef){
-      (componentToAdd as ComponentRef<T>).injector.get(PopoverView).config = configView;
+    if (component instanceof TemplateRef) {
+      componentToAdd = component.createEmbeddedView(props.data as T);
+
+      popoverRef.instance.contentRef?.insert(componentToAdd);
+    } else {
+      componentToAdd = createComponent(component, {
+        environmentInjector: this.appRef.injector,
+        elementInjector: this.injector,
+      });
+
       if(props.data){
         Object.keys(props.data).forEach((key)=>{
           if(Object.keys((componentToAdd as ComponentRef<T>).instance as Object).includes((key))){
@@ -53,24 +58,21 @@ export class PopoverControllerService {
           }
         });
       }
+
+      popoverRef.instance.contentRef?.insert(componentToAdd.hostView);
+
+      componentToAdd.injector.get(PopoverView).config = configView;
     }
 
-    modalComponent.setInput('props', props.modalConfig);
-
     const onDismiss = () => {
-      return new Promise<any>((resolve, _) => {
-        modalComponent.onDestroy(()=>{
+      return new Promise<unknown>((resolve) => {
+        popoverRef.onDestroy(() => {
           resolve(dataResponseModal);
         });
       });
-    }
+    };
 
     return { closePopover, onDismiss };
-
   }
-
-  set setConfigViewContainer(viewContainerRef: ViewContainerRef){
-    this.viewContainerRef = viewContainerRef;
-  }
-
 }
+

@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { PopoverData } from './interfaces/popopover.interface';
 
 @Injectable({
   providedIn: 'root'
