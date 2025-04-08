@@ -7,11 +7,14 @@ import {
   effect,
   inject,
   input,
+  output,
+  signal,
   viewChild,
 } from '@angular/core';
 import { PopoverConfig } from '../interfaces/popopover.interface';
 import { POPOVER_INSTANCE } from '../tokens/popover.token';
 import { CommonModule } from '@angular/common';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'custom-popover',
@@ -20,15 +23,31 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   encapsulation: ViewEncapsulation.ShadowDom,
+  animations: [
+    trigger('fadePopover', [
+      state('open', style({ opacity: 1, transform: 'scale(1)' })),
+      state('closed', style({ opacity: 0, transform: 'scale(0.95)' })),
+      transition('open => closed', animate('150ms ease-in')),
+      transition('void => open', [
+        style({ opacity: 0, transform: 'scale(0.95)' }),
+        animate('150ms ease-out'),
+      ]),
+    ]),
+  ],
 })
 export class PopoverComponent {
   container = viewChild.required<ElementRef<HTMLDivElement>>('container');
   arrow = viewChild.required<ElementRef<HTMLDivElement>>('arrow');
   contentRef = viewChild.required('contentRef', { read: ViewContainerRef });
+  animationDone = output<unknown>();
 
   props = input.required<PopoverConfig>();
 
   render = inject(Renderer2);
+
+  state = signal<'open' | 'closed'>('open');
+
+  private closeData: unknown;
 
   private popoverInstance = inject(POPOVER_INSTANCE);
   constructor() {
@@ -44,6 +63,11 @@ export class PopoverComponent {
     });
   }
 
+  close(data?: any) {
+    this.closeData = data;
+    this.state.set('closed');
+  }
+
   closePopover($event: MouseEvent) {
     const target: HTMLElement = $event.target as HTMLElement;
     if (
@@ -51,6 +75,12 @@ export class PopoverComponent {
       this.props().backDropDismmiss
     ) {
       this.popoverInstance.dismiss({ onBackdropDismiss: true });
+    }
+  }
+
+  onAnimationDone(event: any) {
+    if (event.toState === 'closed') {
+      this.animationDone.emit(this.closeData);
     }
   }
 

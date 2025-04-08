@@ -41,10 +41,15 @@ export class PopoverControllerService {
       elementInjector: newInjector,
     });
 
-    closePopover = (dataResponse?: any) => {
-      dataResponseModal = dataResponse;
+    const subs = popoverRef.instance.animationDone.subscribe((dataFromComponent) => {
+      dataResponseModal = dataFromComponent;
       this.appRef.detachView(popoverRef.hostView);
       popoverRef.destroy();
+      subs.unsubscribe();
+    });
+
+    closePopover = (dataResponse?: unknown) => {
+      popoverRef.instance.close(dataResponse);
     };
 
     this.appRef.attachView(popoverRef.hostView);

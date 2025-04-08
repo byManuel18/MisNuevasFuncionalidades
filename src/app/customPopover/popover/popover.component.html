@@ -1,5 +1,11 @@
 <div class="popover-backdrop" part="backdrop" (click)="closePopover($event)">
-  <div class="popover-container" part="container" #container>
+  <div
+    #container
+    class="popover-container"
+    part="container"
+    [@fadePopover]="state()"
+    (@fadePopover.done)="onAnimationDone($event)"
+  >
     <div class="arrow-container" part="arrow-container">
       <div class="arrow" part="arrow" #arrow></div>
     </div>
