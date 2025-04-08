@@ -20,7 +20,6 @@ import { AsideService } from './customAside/aside.service';
 import { CustomModalModule } from './customModal/custom-modal.module';
 import { ModalService } from './customModal/modal.service';
 import { PruebaModalComponent } from './prueba-modal/prueba-modal.component';
-import { CustomPopoverModule } from './customPopover/custom-popover.module';
 import { PopoverControllerService } from './customPopover/popover-controller.service';
 import { PruebaPopoverComponent } from './prueba-popover/prueba-popover.component';
 import { Position } from './customPopover/interfaces/popopover.interface';
@@ -46,7 +45,6 @@ interface Ejemplo {
     CustomAsideModule,
     CustomModalModule,
     PruebaModalComponent,
-    CustomPopoverModule,
     PruebaPopoverComponent,
     SpinerCustomModule,
   ],

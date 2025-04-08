@@ -56,7 +56,6 @@ export class PopoverControllerService {
     let componentToAdd: ComponentRef<T> | EmbeddedViewRef<any>;
     let dataResponseModal: any;
 
-    // popoverRef.injector.get().config = configView;
     popoverRef.setInput('props', props.modalConfig);
 
     if (component instanceof TemplateRef) {
@@ -64,7 +63,7 @@ export class PopoverControllerService {
         props.data as T,
         newInjector
       );
-      popoverRef.instance.contentRef?.insert(componentToAdd);
+      popoverRef.instance.contentRef()?.insert(componentToAdd);
     } else {
       componentToAdd = createComponent(component, {
         environmentInjector: this.appRef.injector,
@@ -86,7 +85,7 @@ export class PopoverControllerService {
         });
       }
 
-      popoverRef.instance.contentRef?.insert(componentToAdd.hostView);
+      popoverRef.instance.contentRef()?.insert(componentToAdd.hostView);
     }
 
     const onDismiss = () => {
