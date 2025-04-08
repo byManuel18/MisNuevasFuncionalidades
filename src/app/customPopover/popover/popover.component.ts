@@ -25,11 +25,11 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   encapsulation: ViewEncapsulation.ShadowDom,
   animations: [
     trigger('fadePopover', [
-      state('open', style({ opacity: 1, transform: 'scale(1)' })),
-      state('closed', style({ opacity: 0, transform: 'scale(0.95)' })),
+      state('open', style({ opacity: 1 })),
+      state('closed', style({ opacity: 0 })),
       transition('open => closed', animate('150ms ease-in')),
       transition('void => open', [
-        style({ opacity: 0, transform: 'scale(0.95)' }),
+        style({ opacity: 0 }),
         animate('150ms ease-out'),
       ]),
     ]),
