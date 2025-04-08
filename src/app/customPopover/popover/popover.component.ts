@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnInit, Renderer2, ViewChild, ViewChildren, ViewContainerRef, inject } from '@angular/core';
-import { PopoverView } from '../popoverView.service';
+import { AfterViewInit, Component, ElementRef, Input, Renderer2, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { PopoverConfig } from '../interfaces/popopover.interface';
+import { POPOVER_INSTANCE } from '../tokens/popover.token';
 
 @Component({
   selector: 'custom-popover',
@@ -19,9 +19,8 @@ export class PopoverComponent<T> implements AfterViewInit{
   render = inject(Renderer2);
 
 
-  constructor(@Inject(PopoverView) private popoverView: PopoverView<T>){
+  private popoverInstance = inject(POPOVER_INSTANCE);
 
-  }
   ngAfterViewInit(): void {
     this.stylingPopover();
   }
@@ -29,7 +28,7 @@ export class PopoverComponent<T> implements AfterViewInit{
   closePopover($event: MouseEvent){
     const target: HTMLElement = ($event.target as HTMLElement);
     if(target.classList.contains('popover-backdrop') && this.props.backDropDismmiss ){
-      this.popoverView.config.close({ onBackdropDismiss: true });
+      this.popoverInstance.dismiss({ onBackdropDismiss: true });
     }
 
   }

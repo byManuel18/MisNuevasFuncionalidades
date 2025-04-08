@@ -1,6 +1,5 @@
-import { Component, Inject, Input } from '@angular/core';
-import { PopoverView } from '../customPopover/popoverView.service';
-
+import { Component, inject, Input } from '@angular/core';
+import { POPOVER_INSTANCE } from '../customPopover/tokens/popover.token';
 @Component({
   selector: 'app-prueba-popover',
   standalone: true,
@@ -12,13 +11,15 @@ export class PruebaPopoverComponent {
 
   @Input() title: string = '';
 
-  constructor(@Inject(PopoverView) private modalView: PopoverView<PruebaPopoverComponent>){
+  private popoverInstance = inject(POPOVER_INSTANCE);
+
+  constructor(){
 
   }
 
 
   closePopover(){
-    this.modalView.config.close({pruebaPopoverComponent: 'Cerrado dese Aqui'});
+    this.popoverInstance.dismiss({pruebaPopoverComponent: 'Cerrado dese Aqui'});
   }
 
 
